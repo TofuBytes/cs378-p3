@@ -41,9 +41,16 @@
   margin: 10px;
 }
 
-.display{
+.displayTime{
   font-weight: bold;
-  margin: 30px;
+  float: left;
+  margin: 20px;
+}
+
+.displayTemp{
+  font-weight: bold;
+  float: right;
+  margin: 20px;
 }
 
 .info {
@@ -56,3 +63,39 @@
 .clicked{
   background-color: #8b8b8b;
 }
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.column {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.col1 {
+  width: 50%;
+  height: 100vh;
+  text-align: center;
+}
+
+.col2 {
+  width: 50%;
+  text-align: center;
+  height: 100vh;
+}
+
+.info{
+  padding: 1px;
+}
+
+

@@ -68,17 +68,33 @@ export class Weather extends React.Component {
   })
   }
 
-  showinfo = () => {
-    let info = []
-    for (let i = 0; i < 12; i++) {
-      info.push(
-        <div>
-          <span className="display">time</span>
-          <span className="display">temperature</span>
+  showTimes = () => {
+    let times = []
+
+    for (let i = 0; i < 12; i++){
+      let val = "" + this.state.hourly[i]
+      let hr = val.substring(10)
+      times.push(
+        <div className="info">
+          {hr}
         </div>
       )
     }
-    return info;
+    return times;
+  }
+
+  showTemps = () => {
+    let temps = []
+
+    for (let i = 0; i < 12; i++){
+      let val = Math.round(this.state.temperatures[i]) + " F"
+      temps.push(
+        <div className="info">
+          {val}
+        </div>
+      )
+    }
+    return temps;
   }
 
   displayWeather = () => {
@@ -88,12 +104,22 @@ export class Weather extends React.Component {
 
     return (
       <div id="weatherDisplay">
-        <div>
-          <span className="display">Time</span>
-          <span className="display">Temperature</span>
+        <div className="row">
+          <div className="col1">
+            <h3>Time</h3>
+            {
+              this.showTimes()
+            }
+          </div>
+          <div className="col2">
+            <h3>Temperature</h3>
+            {
+              this.showTemps()
+            }
+          </div>
         </div>
         {
-          this.showinfo()
+          //this.showinfo()
         }
       </div>
     )
@@ -117,15 +143,13 @@ export class Weather extends React.Component {
     }).then(response=>response.json())
     .then(data=>{
       this.setState({
-        hourly : [
-          data.hourly.time
-        ]
+        hourly : data.hourly.time
+    
       })
 
       this.setState({
-        temperatures : [
-          data.hourly.temperature_2m
-        ]
+        temperatures : data.hourly.temperature_2m
+        
       })
       //alert(JSON.stringify(data.hourly.temperature_2m))
     }
