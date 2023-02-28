@@ -85,12 +85,14 @@
 .col1 {
   width: 50%;
   height: 100vh;
+  margin-left: 20%;
   text-align: center;
 }
 
 .col2 {
   width: 50%;
   text-align: center;
+  margin-right: 20%;
   height: 100vh;
 }
 

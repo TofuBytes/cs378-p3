@@ -14,11 +14,10 @@ export class Weather extends React.Component {
         ],
         selectedCity: "",
         hourly : [],
-        temperatures : []
+        temperatures : [], 
+        currentHour : new Date().getHours()
     };
   } 
-
- 
 
   handleInputChange = (e) =>{
     //alert(e.target.value);
@@ -28,14 +27,17 @@ export class Weather extends React.Component {
     //this.state.search = e.target.value;
  }
 
- capitalizeFirstLetter = (string) => {
-  return string.charAt(0).toUpperCase() + string.toLowerCase().slice(1);
- }
+  //capitalize first letter of city input 
+  capitalizeFirstLetter = (string) => {
+   return string.charAt(0).toUpperCase() + string.toLowerCase().slice(1);
+  }
 
+  //check if input is valid location- if invalid throw alert, else add as button
   validateAndAddLocation = () => {
     //const loc = document.getElementById("search").value;
     const loc = this.capitalizeFirstLetter(this.state.search);
 
+    //do nothing if city is already a button
     if(this.state.cities.includes(loc)){
       this.setState({
         search: ''
@@ -43,12 +45,13 @@ export class Weather extends React.Component {
       return;
     }
 
+    //get locaation details from api
     const base_url = "https://geocoding-api.open-meteo.com/v1/search?name=" + loc;
-
 
     fetch(base_url)
     .then(response=>response.json())
     .then(data=>{ 
+      //if data exists for input, then it is a valid city
       if(data.results){
         this.setState({
           cities: [
@@ -58,25 +61,41 @@ export class Weather extends React.Component {
        }); 
        this.selectCity(loc)
       } else{
+        //else fail
         alert("Could not find weather for " + loc)
       }
     })
 
-  
-  this.setState({
-    search: ''
-  })
+    //clear input bar when done
+    this.setState({
+      search: ''
+    })
   }
 
   showTimes = () => {
     let times = []
+    let current = this.state.currentHour
+    let stop = current + 12
 
-    for (let i = 0; i < 12; i++){
+    for (let i = current; i < stop; i++){
       let val = "" + this.state.hourly[i]
-      let hr = val.substring(10)
+      let hr = parseInt(val.substring(11,13))
+
+      let time = (hr % 12) + ":00"
+
+      if(hr === 0 || hr === 12){
+        time = "12:00"
+      }
+
+      if(hr < 12){
+        time = time + " AM"
+      } else{
+        time = time + " PM"
+      }
+
       times.push(
-        <div className="info">
-          {hr}
+        <div className="info" key={time}>
+          {time}
         </div>
       )
     }
@@ -85,11 +104,13 @@ export class Weather extends React.Component {
 
   showTemps = () => {
     let temps = []
+    let current = this.state.currentHour
+    let stop = current + 12
 
-    for (let i = 0; i < 12; i++){
+    for (let i = current; i < stop; i++){
       let val = Math.round(this.state.temperatures[i]) + " F"
       temps.push(
-        <div className="info">
+        <div className="info" key={"temp"+i}>
           {val}
         </div>
       )
@@ -118,9 +139,6 @@ export class Weather extends React.Component {
             }
           </div>
         </div>
-        {
-          //this.showinfo()
-        }
       </div>
     )
   }
