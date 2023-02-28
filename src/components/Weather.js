@@ -72,6 +72,7 @@ export class Weather extends React.Component {
     })
   }
 
+  //display the next 12 hours from current hour
   showTimes = () => {
     let times = []
     let current = this.state.currentHour
@@ -81,6 +82,7 @@ export class Weather extends React.Component {
       let val = "" + this.state.hourly[i]
       let hr = parseInt(val.substring(11,13))
 
+      //convert to standard time
       let time = (hr % 12) + ":00"
 
       if(hr === 0 || hr === 12){
@@ -102,6 +104,7 @@ export class Weather extends React.Component {
     return times;
   }
 
+  //display temperatures for next 12 hrs based on current time
   showTemps = () => {
     let temps = []
     let current = this.state.currentHour
@@ -118,6 +121,7 @@ export class Weather extends React.Component {
     return temps;
   }
 
+  //create the display for time and temperature
   displayWeather = () => {
     if(this.state.hourly.length === 0){
       return;
@@ -143,11 +147,13 @@ export class Weather extends React.Component {
     )
   }
 
+  //get the weather information based on coordinates taken from city name
   populateWeather = (city) => {
     if(city === ""){
       return;
     }
 
+    //get latitude and longitude from city name
     const base_url = "https://geocoding-api.open-meteo.com/v1/search?name=" + city;
     fetch(base_url)
     .then(response=>response.json())
@@ -156,6 +162,7 @@ export class Weather extends React.Component {
       let long = data.results[0].longitude
       //alert(lat +","+ long);
 
+      //retrieve weather based on lat long values
       const wea_url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&hourly=temperature_2m&temperature_unit=fahrenheit`
       return fetch(wea_url)
     }).then(response=>response.json())
@@ -174,7 +181,7 @@ export class Weather extends React.Component {
     )
   }
   
-
+  //get city clicked and retrieve results
   selectCity = (city) => {
     this.setState ({
         selectedCity: city
@@ -183,6 +190,7 @@ export class Weather extends React.Component {
     this.populateWeather(city)
   }
 
+  //update status of buttons
   renderCities = () => {
     return (
       this.state.cities.map((city,index) => {
