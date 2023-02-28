@@ -1,5 +1,6 @@
 import React from "react";
 
+
 export class Weather extends React.Component {
   constructor(props) {
     super(props);
@@ -25,11 +26,11 @@ export class Weather extends React.Component {
       search: e.target.value
   });
     //this.state.search = e.target.value;
-}
+ }
 
-capitalizeFirstLetter = (string) => {
+ capitalizeFirstLetter = (string) => {
   return string.charAt(0).toUpperCase() + string.toLowerCase().slice(1);
-}
+ }
 
   validateAndAddLocation = () => {
     //const loc = document.getElementById("search").value;
@@ -67,10 +68,33 @@ capitalizeFirstLetter = (string) => {
   })
   }
 
+  showinfo = () => {
+    let info = []
+    for (let i = 0; i < 12; i++) {
+      info.push(
+        <div>
+          <span className="display">time</span>
+          <span className="display">temperature</span>
+        </div>
+      )
+    }
+    return info;
+  }
+
   displayWeather = () => {
+    if(this.state.hourly.length === 0){
+      return;
+    }
+
     return (
       <div id="weatherDisplay">
-
+        <div>
+          <span className="display">Time</span>
+          <span className="display">Temperature</span>
+        </div>
+        {
+          this.showinfo()
+        }
       </div>
     )
   }
@@ -86,17 +110,27 @@ capitalizeFirstLetter = (string) => {
     .then(data=>{
       let lat = data.results[0].latitude
       let long = data.results[0].longitude
-      alert(lat +","+ long);
+      //alert(lat +","+ long);
 
       const wea_url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&hourly=temperature_2m&temperature_unit=fahrenheit`
       return fetch(wea_url)
     }).then(response=>response.json())
     .then(data=>{
-      alert(JSON.stringify(data))
+      this.setState({
+        hourly : [
+          data.hourly.time
+        ]
+      })
+
+      this.setState({
+        temperatures : [
+          data.hourly.temperature_2m
+        ]
+      })
+      //alert(JSON.stringify(data.hourly.temperature_2m))
     }
     )
   }
-
   
 
   selectCity = (city) => {
@@ -111,7 +145,7 @@ capitalizeFirstLetter = (string) => {
     return (
       this.state.cities.map((city,index) => {
         if(city === this.state.selectedCity){
-
+          return <button key={city+""+index} className="btn clicked" type="button" onClick={() => this.selectCity(city)}>{city}</button>
         }else{
           return <button key={city+""+index} className="btn" type="button" onClick={() => this.selectCity(city)}>{city}</button>
         }
@@ -134,6 +168,7 @@ capitalizeFirstLetter = (string) => {
       </div>
       {
         //this.populateWeather()
+        this.displayWeather()
       }
     </div>
   );
