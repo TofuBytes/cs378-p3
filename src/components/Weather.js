@@ -12,12 +12,16 @@ export class Weather extends React.Component {
           "Austin",
           "Dallas"
         ],
-        selectedCity: "",
+        selectedCity: "Austin",
         hourly : [],
         temperatures : [], 
         currentHour : new Date().getHours()
     };
   } 
+
+  componentDidMount() {
+    this.populateWeather("Austin")
+  }
 
   handleInputChange = (e) =>{
     //alert(e.target.value);
